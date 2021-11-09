@@ -1,15 +1,13 @@
 /* Installation d'express */
 const express = require("express");
 const app = express();
+/*Conection à mongoDB */
+const mongoose = require("mongoose");
 
 /* Configuration du routage: stuffRoutes   */
 const stuffRoutes = require("./routes/stuff");
 /* */
 const userRoutes = require("./routes/user");
-
-/*Conection à mongoDB */
-
-const mongoose = require("mongoose");
 
 mongoose
   .connect(

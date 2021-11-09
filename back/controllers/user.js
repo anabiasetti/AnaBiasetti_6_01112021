@@ -4,6 +4,12 @@
  *
  */
 const bcrypt = require("bcrypt");
+/**
+ * Pour créer et vérifier les tokens d'authentification, il nous faudra un nouveau package :
+npm install --save jsonwebtoken
+Nous l'importerons ensuite dans notre contrôleur utilisateur :
+ */
+const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
 exports.signup = (req, res, next) => {
@@ -37,7 +43,7 @@ exports.login = (req, res, next) => {
           }
           res.status(200).json({
             userId: user._id,
-            token: "TOKEN",
+            token: jwt.sign({ userId: user._id }, "NEyE9zdtv1f9HMEvHx5J", { expiresIn: "24h" }),
           });
         })
         .catch((error) => res.status(500).json({ error }));
