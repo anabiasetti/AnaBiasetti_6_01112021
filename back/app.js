@@ -1,11 +1,14 @@
-/**
- * Installation d'express
- */
+/* Installation d'express */
 const express = require("express");
 const app = express();
-/**
- * Conection à mongoDB
- */
+
+/* Configuration du routage: stuffRoutes   */
+const stuffRoutes = require("./routes/stuff");
+/* */
+const userRoutes = require("./routes/user");
+
+/*Conection à mongoDB */
+
 const mongoose = require("mongoose");
 
 mongoose
@@ -19,9 +22,8 @@ mongoose
   .then(() => console.log("Connexion à MongoDB réussie !"))
   .catch(() => console.log("Connexion à MongoDB échouée !"));
 
-/**
- *  Afin de ressoudre problemes de CORS
- */
+/*  Afin de ressoudre problemes de CORS*/
+
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -42,4 +44,11 @@ app.use(
     extended: true,
   })
 );
+
+/* On utilise le router qui est expossé par stuffroutes*/
+app.use("/api/stuff", stuffRoutes);
+/**
+ *
+ */
+app.use("/api/auth", userRoutes);
 module.exports = app;
