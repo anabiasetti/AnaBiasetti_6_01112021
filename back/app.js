@@ -4,8 +4,8 @@ const app = express();
 /*Conection à mongoDB */
 const mongoose = require("mongoose");
 
-/* Configuration du routage: stuffRoutes   */
-const stuffRoutes = require("./routes/stuff");
+/* Configuration du routage: sauceRoutes   */
+const sauceRoutes = require("./routes/sauces");
 /* */
 const userRoutes = require("./routes/user");
 
@@ -44,7 +44,7 @@ app.use(
 );
 
 /* On utilise le router qui est expossé par stuffroutes*/
-app.use("/api/stuff", stuffRoutes);
+app.use("/api/sauces", sauceRoutes);
 /**
  *
  */
