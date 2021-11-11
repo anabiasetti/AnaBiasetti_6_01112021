@@ -3,6 +3,8 @@ const express = require("express");
 const app = express();
 /*Conection à mongoDB */
 const mongoose = require("mongoose");
+/* Importation dans app.js pour accéder au path de notre serveur :*/
+const path = require("path");
 
 /* Configuration du routage: sauceRoutes   */
 const sauceRoutes = require("./routes/sauces");
@@ -43,10 +45,14 @@ app.use(
   })
 );
 
-/* On utilise le router qui est expossé par stuffroutes*/
+/**https://openclassrooms.com/fr/courses/6390246-passez-au-full-stack-avec-node-js-express-et-mongodb/6466669-modifiez-les-routes-pour-prendre-en-compte-les-fichiers#/id/r-6466649 */
+app.use("/images", express.static(path.join(__dirname, "images")));
+
+/* On utilise le router qui est expossé par sauceRoutes*/
 app.use("/api/sauces", sauceRoutes);
 /**
- *
+ * On utilise le router qui est expossé par sauceRoutes
  */
+
 app.use("/api/auth", userRoutes);
 module.exports = app;
