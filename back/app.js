@@ -3,6 +3,14 @@ const express = require("express");
 const app = express();
 /*Conection à mongoDB */
 const mongoose = require("mongoose");
+/**
+ * Helmet proege l'application de certaines des vulnérabilités bien connues du Web,
+ * en configurant de manière appropriée des en-têtes HTTP.
+  Actuellement est une collection de neuf fonctions middleware plus petites
+ qui définissent des en-têtes HTTP liés à la sécurité :
+ * https://expressjs.com/fr/advanced/best-practice-security.html
+ */
+const helmet = require("helmet");
 /* Importation dans app.js pour accéder au path de notre serveur :*/
 const path = require("path");
 
@@ -22,8 +30,10 @@ mongoose
   .then(() => console.log("Connexion à MongoDB réussie !"))
   .catch(() => console.log("Connexion à MongoDB échouée !"));
 
-/*  Afin de ressoudre problemes de CORS*/
+/* https://helmetjs.github.io/ */
+app.use(helmet());
 
+/* Afin de ressoudre problemes de CORS */
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
