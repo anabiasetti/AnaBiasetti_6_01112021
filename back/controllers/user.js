@@ -14,6 +14,14 @@ const User = require("../models/User");
 
 exports.signup = (req, res, next) => {
   /*Avec le hash crée par bcrypt on enregistre l'user dans la base de données*/
+  const regex = new RegExp(/^(?=.{10,}$)(?=(?:.*?[A-Z]){2})(?=.*?[a-z])(?=(?:.*?[0-9]){2}).*$/);
+  if (!regex.test(req.body.password)) {
+    res.status(400).json({
+      error: "Un mot de passe contenant au moins 2 majuscules, 1 minuscule, 2 chiffres et d'une longueur d'au moins 10",
+    });
+    return;
+  }
+
   bcrypt
     .hash(req.body.password, 10)
     .then((hash) => {
