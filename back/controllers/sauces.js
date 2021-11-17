@@ -17,8 +17,8 @@ exports.createSauce = (req, res, next) => {
     imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
     likes: 0,
     dislikes: 0,
-    usersLiked: [" "],
-    usersdisLiked: [" "],
+    usersLiked: [],
+    usersDisLiked: [],
   });
   sauce
     .save()
@@ -66,35 +66,53 @@ exports.likeDislikeSauce = (req, res, next) => {
   const userId = req.body.userId;
   const sauceId = req.params.id;
   //si like===1 l'utilisateur aime la sauce//
-  if (like === 1) {
-    Sauce.updateOne({ _id: sauceId }, { $push: { usersLiked: userId }, $inc: { likes: +1 } })
-      .then(() => res.status(200).json({ message: "j'aime" }))
-      .catch((error) => res.status(404).json({ error }));
-  } else if (like === 0) {
-    //l'utilisateur annule son like  ou son dislike
-    Sauce.findOne({ _id: sauceId })
-      .then((sauce) => {
-        console.log(sauce);
+
+  Sauce.findOne({ _id: sauceId })
+    .then((sauce) => {
+      //console.log(sauce);
+      if (like === 1) {
+        if (sauce.usersLiked.includes(userId) || sauce.usersDisliked.includes(userId)) {
+          //Si l'utilisateur est déjà dans la liste de likes/dislikes reenvoyer une erreur
+          res.status(401).json({ error: "L'utilisateur a déjà liké ou disliké" });
+        } else {
+          // sinon ajouter un like
+          Sauce.updateOne({ _id: sauceId }, { $push: { usersLiked: userId }, $inc: { likes: +1 } })
+            .then(() => res.status(200).json({ message: "J'aime" }))
+            .catch((error) => res.status(400).json({ error: error.message }));
+        }
+      } else if (like === 0) {
+        //l'utilisateur annule son like  ou son dislike
         if (sauce.usersLiked.includes(userId)) {
+          //si l'utilisateur est dans la liste de likes eliminer son like
           Sauce.updateOne({ _id: sauceId }, { $pull: { usersLiked: userId }, $inc: { likes: -1 } })
-            .then(() => res.status(200).json({ message: `Neutre` }))
-            .catch((error) => res.status(400).json({ error }));
-        }
-        if (sauce.usersDisliked.includes(userId)) {
+            .then(() => res.status(200).json({ message: "Neutre" }))
+            .catch((error) => res.status(400).json({ error: error.message }));
+        } else if (sauce.usersDisliked.includes(userId)) {
+          //si l'utilisateur est dans la liste de dislikes eliminer son dislike
           Sauce.updateOne({ _id: sauceId }, { $pull: { usersDisliked: userId }, $inc: { dislikes: -1 } })
-            .then(() => res.status(200).json({ message: `Neutre` }))
-            .catch((error) => res.status(400).json({ error }));
+            .then(() => res.status(200).json({ message: "Neutre" }))
+            .catch((error) => res.status(400).json({ error: error.message }));
+        } else {
+          //Si l'utilisateur ne se trouve pas en aucun liste renvoyer un error
+          res.status(401).json({ error: "Utilisateur n'a pas liké ou disliké" });
         }
-      })
-      .catch((error) => res.status(404).json({ error }));
-  } else if (like === -1) {
-    //Si like = -1, l'utilisateur n'aime pas la sauce//
-    Sauce.updateOne({ _id: sauceId }, { $push: { usersDisliked: userId }, $inc: { dislikes: +1 } })
-      .then(() => {
-        res.status(200).json({ message: `Je n'aime pas` });
-      })
-      .catch((error) => res.status(400).json({ error }));
-  }
+      } else if (like === -1) {
+        //Si like = -1, l'utilisateur n'aime pas la sauce//
+        if (sauce.usersLiked.includes(userId) || sauce.usersDisliked.includes(userId)) {
+          //Si l'utilisateur est déjà dans la liste de likes/dislikes reenvoyer une erreur
+          res.status(401).json({ error: "L'utilisateur a déjà liké ou disliké" });
+        } else {
+          //sinon mettre un dislike
+          Sauce.updateOne({ _id: sauceId }, { $push: { usersDisliked: userId }, $inc: { dislikes: +1 } })
+            .then(() => {
+              res.status(200).json({ message: "Je n'aime pas" });
+            })
+            .catch((error) => res.status(400).json({ error: error.message }));
+        }
+      }
+    })
+    //
+    .catch((error) => res.status(404).json({ error: error.message }));
 };
 
 exports.getAllSauces = (req, res, next) => {
