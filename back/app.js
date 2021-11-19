@@ -13,6 +13,8 @@ const mongoose = require("mongoose");
 const helmet = require("helmet");
 /* Importation dans app.js pour accéder au path de notre serveur :*/
 const path = require("path");
+/*Installation du dotenv */
+require("dotenv").config();
 
 /* Configuration du routage: sauceRoutes   */
 const sauceRoutes = require("./routes/sauces");
@@ -20,13 +22,10 @@ const sauceRoutes = require("./routes/sauces");
 const userRoutes = require("./routes/user");
 
 mongoose
-  .connect(
-    "mongodb+srv://user:Q3XKunOM35OtdzUp@cluster0.a2ohj.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  )
+  .connect(process.env.SECRET_DB, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => console.log("Connexion à MongoDB réussie !"))
   .catch(() => console.log("Connexion à MongoDB échouée !"));
 
