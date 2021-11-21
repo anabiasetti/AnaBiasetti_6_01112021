@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon serve",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "update": "ncu -u && npm install"
   },
   "author": "",
   "license": "ISC",
@@ -15,7 +16,7 @@
     "express": "^4.17.1",
     "helmet": "^4.6.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.0.12",
+    "mongoose": "^6.0.13",
     "mongoose-errors": "^1.1.2",
     "mongoose-unique-validator": "^3.0.0",
     "multer": "^1.4.3",
