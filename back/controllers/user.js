@@ -4,6 +4,7 @@
  *
  */
 const bcrypt = require("bcrypt");
+require("dotenv").config();
 /**
  * Pour créer et vérifier les tokens d'authentification, il nous faudra un nouveau package :
 npm install --save jsonwebtoken
@@ -24,7 +25,7 @@ exports.signup = (req, res, next) => {
 
   /*Avec le hash crée par bcrypt on enregistre l'user dans la base de données*/
   bcrypt
-    .hash(req.body.password, 10)
+    .hash(req.body.password, process.env.TOKEN_SALT)
     .then((hash) => {
       const user = new User({
         email: req.body.email,
@@ -52,7 +53,9 @@ exports.login = (req, res, next) => {
           }
           res.status(200).json({
             userId: user._id,
-            token: jwt.sign({ userId: user._id }, "NEyE9zdtv1f9HMEvHx5J", { expiresIn: "24h" }),
+            token: jwt.sign({ userId: user._id }, process.env.SECRET_TOKEN, {
+              expiresIn: process.env.TOKEN_EXPIRES_IN,
+            }),
           });
         })
         .catch((error) => res.status(500).json({ error }));
