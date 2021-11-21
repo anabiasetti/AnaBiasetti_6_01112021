@@ -25,7 +25,7 @@ exports.signup = (req, res, next) => {
 
   /*Avec le hash crée par bcrypt on enregistre l'user dans la base de données*/
   bcrypt
-    .hash(req.body.password, process.env.TOKEN_SALT)
+    .hash(req.body.password, Number(process.env.TOKEN_SALT))
     .then((hash) => {
       const user = new User({
         email: req.body.email,
