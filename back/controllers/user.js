@@ -13,7 +13,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
 exports.signup = (req, res, next) => {
-  /*Avec le hash crée par bcrypt on enregistre l'user dans la base de données*/
+  /*Regex pour valider le mot de passe */
   const regex = new RegExp(/^(?=.{10,}$)(?=(?:.*?[A-Z]){2})(?=.*?[a-z])(?=(?:.*?[0-9]){2}).*$/);
   if (!regex.test(req.body.password)) {
     res.status(400).json({
@@ -22,6 +22,7 @@ exports.signup = (req, res, next) => {
     return;
   }
 
+  /*Avec le hash crée par bcrypt on enregistre l'user dans la base de données*/
   bcrypt
     .hash(req.body.password, 10)
     .then((hash) => {

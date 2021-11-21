@@ -12,8 +12,11 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
     unique: true,
+    /* Vailidation de l'entrée de email */
     match: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/,
+    /*Pour sanitiser l'entrée de données */
     trim: true,
+    /*Pour que 2 emails avec differents capitalisations ne soient pas acceptées */
     lowercase: true,
   },
   password: {
