@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const mongooseErrors = require("mongoose-errors");
 /*creation d'un schema de données*/
 const sauceSchema = mongoose.Schema({
   userId: { type: String, required: true },
@@ -15,5 +16,7 @@ const sauceSchema = mongoose.Schema({
   usersDisliked: { type: [String], required: true } /* tableau des identifiants des
     utilisateurs qui n'ont pas aimé */,
 });
+
+sauceSchema.plugin(mongooseErrors);
 
 module.exports = mongoose.model("Sauce", sauceSchema);

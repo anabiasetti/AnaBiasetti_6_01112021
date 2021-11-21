@@ -7,6 +7,8 @@ const mongoose = require("mongoose");
  * npm install --save mongoose-unique-validator
  */
 const uniqueValidator = require("mongoose-unique-validator");
+const mongooseErrors = require("mongoose-errors");
+
 const userSchema = mongoose.Schema({
   email: {
     type: String,
@@ -29,5 +31,6 @@ const userSchema = mongoose.Schema({
  * en passant uniqueValidator comme argument
  */
 userSchema.plugin(uniqueValidator);
+userSchema.plugin(mongooseErrors);
 
 module.exports = mongoose.model("User", userSchema);
