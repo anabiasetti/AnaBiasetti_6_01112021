@@ -40,18 +40,24 @@ exports.signup = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
+  //On recupére l'user dans la base de donnée qui correspond à l'email entré
   User.findOne({ email: req.body.email })
     .then((user) => {
       if (!user) {
         return res.status(401).json({ error: "Utilisateur non trouvé !" });
       }
       bcrypt
+        /**
+         * On veut comparer le mot de passe qui est envoyé avec la requête
+         * avec le hash qui est enregisré dans notre user
+         */
         .compare(req.body.password, user.password)
         .then((valid) => {
           if (!valid) {
             return res.status(401).json({ error: "Mot de passe incorrect !" });
           }
           res.status(200).json({
+            //l'identifiant de l'tilisateur dans la base de données
             userId: user._id,
             token: jwt.sign({ userId: user._id }, process.env.SECRET_TOKEN, {
               expiresIn: process.env.TOKEN_EXPIRES_IN,

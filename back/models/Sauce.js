@@ -16,7 +16,8 @@ const sauceSchema = mongoose.Schema({
   usersDisliked: { type: [String], required: true } /* tableau des identifiants des
     utilisateurs qui n'ont pas aimé */,
 });
-
+//plugin pour les erreurs
 sauceSchema.plugin(mongooseErrors);
-
+/**nous exportons ce schéma en tant que modèle Mongoose appelé «Sauce», 
+le rendant par là même disponible pour notre application Express.*/
 module.exports = mongoose.model("Sauce", sauceSchema);

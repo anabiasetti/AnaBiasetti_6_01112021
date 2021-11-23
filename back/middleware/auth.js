@@ -15,15 +15,17 @@ module.exports = (req, res, next) => {
       throw "User ID required";
     } else if (req.method === "DELETE" || req.method === "PUT") {
       // Si c'est un DELETE ou PUT, vérifier si le créateur de la sauce est bien le user (depuis token)
-      Sauce.findOne({ _id: req.params.id }).then((sauce) => {
-        if (sauce.userId !== userId) {
-          res.status(401).json({
-            error: "Unauthorized request!",
-          });
-        } else {
-          next();
-        }
-      });
+      Sauce.findOne({ _id: req.params.id })
+        .then((sauce) => {
+          if (sauce.userId !== userId) {
+            res.status(401).json({
+              error: "Unauthorized request!",
+            });
+          } else {
+            next();
+          }
+        })
+        .catch((error) => res.status(404).json({ error: error.message }));
     } else {
       next();
     }

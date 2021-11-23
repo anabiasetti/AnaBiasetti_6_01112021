@@ -47,7 +47,10 @@ exports.updateSauce = (req, res, next) => {
 exports.deleteSauce = (req, res, next) => {
   /**
    * https://openclassrooms.com/fr/courses/6390246-passez-au-full-stack-avec-node-js-express-et-mongodb/6466697-developpez-la-fonction-delete-du-back-end#/id/r-6466678
-   *
+   * On utilise la méthode findOne() dans notre modèle Sauce 
+   pour trouver la sauce unique ayant le même _id que le paramètre de la requête ;
+   ce Sauce est ensuite retourné dans une Promise et envoyé au front-end ;
+   * 
    */
   Sauce.findOne({ _id: req.params.id })
     .then((sauce) => {
