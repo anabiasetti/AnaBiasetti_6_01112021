@@ -68,6 +68,10 @@ exports.likeDislikeSauce = (req, res, next) => {
   const like = req.body.like;
   const userId = req.body.userId;
   const sauceId = req.params.id;
+  if (!userId) {
+    res.status(401).json({ error: "Utilisateur requis !" });
+    return;
+  }
   //si like===1 l'utilisateur aime la sauce//
 
   Sauce.findOne({ _id: sauceId })
@@ -112,6 +116,8 @@ exports.likeDislikeSauce = (req, res, next) => {
             })
             .catch((error) => res.status(400).json({ error: error.message }));
         }
+      } else {
+        res.status(400).json({ error: "Like ne peut que être égale à -1, 0 ou 1" });
       }
     })
     //
